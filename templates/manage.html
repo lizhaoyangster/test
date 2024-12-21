@@ -1,0 +1,134 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static '/css/manage.css'%}">
+    <link rel="stylesheet" href="{% static 'css/bs4.pop.css'%}">
+    <title>四川航空餐厅点餐系统-管理后台</title>
+</head>
+
+<body>
+
+    <div class="container" style="margin-top: 2%">
+        <h1>后台管理系统</h1>
+        <hr>
+        <div class="row mt-3">
+            <!-- 左侧 餐桌负责状态表 + Log Out -->
+            <div class="col-4">
+                <div class="row ml-1"><h2>你好，{{user.username}}</h2></div>
+                <div class="row">
+                    <form class="col" action="/accounts/signout/" method="POST">
+                        <a href="/order/check"><button class="btn btn-block btn-danger">退出登陆</button></a>
+                    </form>
+                    <div class="col"><a href="/accounts/signup/" class="btn btn-block btn-primary">注  册</a></div>
+                </div>
+                <table class="table text-center mt-3" id="table-info-table">
+                    <caption>
+                        餐桌状态表
+                        <!-- <button class="btn btn-success btn-sm" id='add-table'>添加</button> -->
+                    </caption>
+                    <tr>
+                        <th>桌号</th>
+                        <th>桌名</th>
+                        <!-- <th>负责人</th> -->
+                        <th>状态</th>
+                    </tr>
+                    {% for tableInfo in tableInfoList %}
+                    <tr class="" id="table-{{tableInfo.table_id}}" data-toggle="pill"
+                        href="#table-{{tableInfo.table_id}}-content" role="tab" table_id={{tableInfo.table_id}}
+                        staff_id={{tableInfo.staff_id}}>
+                        <td>{{tableInfo.table_id}}</td>
+                        <td>{{tableInfo.table_name}}</td>
+                        <!-- <td>{{tableInfo.staff_name}}</td> -->
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- 右侧 区域 -->
+            <div class="col ml-1">
+                <!-- 顶部的几个按钮 -->
+                <div class="row" id="entry-button-group">
+                    <div class="col">
+                        <a href="/order/check"><button class="btn btn-block btn-outline-primary">结 账</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="/manage/orders"><button class="btn btn-block btn-outline-danger">订 单</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="/manage/staffs"><button class="btn btn-block btn-outline-danger">员 工</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="/manage/tables"><button class="btn btn-block btn-outline-danger">餐 桌</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="/manage/foods"><button class="btn btn-block btn-outline-danger">菜 品</button></a>
+                    </div>
+                    <div class="col">
+                        <a href="/"><button class="btn btn-block btn-outline-success">主 页</button></a>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    {% for tableInfo in tableInfoList %}
+                    <div class="tab-pane fade table-detail" table_id={{tableInfo.table_id}}
+                        id="table-{{tableInfo.table_id}}-content" role="tabpanel">
+                        <hr>
+                        <h4 class="row">
+                            <div class="col-4">
+                                桌号：{{tableInfo.table_id}}
+                            </div>
+                            <!-- <button class="col-1 btn btn-sm btn-danger">删除</button> -->
+                            <div class="col-4">
+                                负责人：
+                                <span class="badge badge-primary badge-pill"
+                                    id="staff-name-in-table-{{tableInfo.table_id}}" data-toggle="collapse"
+                                    href="#staff-list-in-table-{{tableInfo.table_id}}" role="button">
+                                    {{tableInfo.staff_name}}
+                                </span>
+                            </div>
+                        </h4>
+                        <hr>
+                        <div class="collapse" id="staff-list-in-table-{{tableInfo.table_id}}">
+                            <div class="card card-body">
+                                <div class="row px-3">
+                                    {% for staff in staffList %}
+                                    <button class="staff-opt-btn col-2 btn btn-light px-0" staff_id={{staff.ID}}>
+                                        {{staff.name}}
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2" style="font-weight: bold">
+                            <div class="col">订单号</div>
+                            <div class="col">名称</div>
+                            <div class="col">数量</div>
+                            <div class="col-3">状态</div>
+                            <div class='col-2'></div>
+                        </div>
+
+                        <div class="order-item-table">
+                            <!-- 动态填充 -->
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+    <script src="{% static 'bootstrap-4.3.1-dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/bs4.pop.js' %}"></script>
+    <script src="{% static 'js/manage.js' %}"></script>
+
+</body>
+
+</html>
